@@ -2,8 +2,9 @@
 The retrieval based voice generation text to speech system is a python based text to speech that relies on two core parts. to be able to generate speech, It relies on tacotron to convert the text to speech and then uses rvc voice conversion to be able to make it sound like any character without the need to use an audio file.
 
 ## Requirements
-This tts has been tested on [python 3.10](https://www.python.org/downloads/release/python-31011/).
-You are required to have the latest [Espeak NG](https://github.com/espeak-ng/espeak-ng/releases).
+This tts has been tested on [python 3.10](https://www.python.org/downloads/release/python-31011/) although might work on other versions.
+
+You are required to have the latest 64 bit [Espeak NG](https://github.com/espeak-ng/espeak-ng/releases) release.
 
 ## Usage
 To use it, simply install the requirements with `pip install -r requirements.txt` and then download the [Hubert](https://huggingface.co/lj1995/VoiceConversionWebUI/resolve/main/hubert_base.pt) model, [Forward Tacotron](https://public-asai-dl-models.s3.eu-central-1.amazonaws.com/ForwardTacotron/forward_step90k.pt) model and any [RVC](https://discord.com/invite/aihub) model.
@@ -15,10 +16,15 @@ You can then place them into the model folder with the corresponding names:
 
 Once you have all of these, you can run the `RVG.py` file and replace the sample text on the provided function call at the bottom or you can include this code in your own project and import the `rvg_tts` function from `RVG.py`.
 
+## Current feature set
+ - RVC v1 and v2 model support
+ - RVC Index support
+ - Fast inference speed (~10 seconds)
+
 ## Todo
- - [X] Add in support for the RVC v1 models
- - [X] Fix assertion error with faiss index when using rvc index files
+ - [X] Support both RVC model versions
  - [ ] Create a proper importable package
+ - [ ] Support calling from CLI
  - [ ] Further code condensing 
 
 ## Credits

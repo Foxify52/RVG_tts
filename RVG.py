@@ -159,7 +159,7 @@ def vc_single(sid, audio, input_audio, f0_up_key, f0_file, f0_method, file_index
     print(times)
     return audio_opt
 
-def get_vc(model_path): # TODO update get_vc to work with v1 256 synth models without causing size mismatch error
+def get_vc(model_path):
     global n_spk,tgt_sr,net_g,vc,cpt,device,is_half, version
     cpt = torch.load(model_path, map_location="cpu")
     tgt_sr = cpt["config"][-1]
@@ -191,7 +191,7 @@ device = "cuda:0"
 is_half = False
 config=Config(device,is_half)
 
-def rvg_tts(input_text):
+def rvg_tts(input_text, voice_transform=0):
     synth_forward = Synthesizer(tts_path=f'{now_dir}\\models\\forward.pt')
     synth_output = pcm2float(synth_forward(input_text, voc_model='melgan', alpha=1.2), dtype=np.float32)
 
@@ -200,7 +200,7 @@ def rvg_tts(input_text):
         sid=0, 
         audio=synth_output,
         input_audio=None, 
-        f0_up_key=0,
+        f0_up_key=voice_transform,
         f0_file=None, 
         f0_method="crepe",
         file_index=f"{now_dir}\\models\\rvc_index.index",
@@ -209,4 +209,4 @@ def rvg_tts(input_text):
     wavfile.write("output.wav", tgt_sr, wav_opt)
     winsound.PlaySound("output.wav", winsound.SND_FILENAME)
 
-rvg_tts('Sample text. Replace me!')
+rvg_tts('Sample text. Replace me!', 0)
