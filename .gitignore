@@ -43,6 +43,7 @@ venv.bak/
 /models/forward.pt
 /models/hubert.pt
 /models/rvc_model.pth
+/models/rvc_index.index
 
 # wav
 output.wav

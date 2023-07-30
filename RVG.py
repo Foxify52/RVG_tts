@@ -161,27 +161,33 @@ def vc_single(sid, audio, input_audio, f0_up_key, f0_file, f0_method, file_index
 
 def get_vc(model_path): # TODO update get_vc to work with v1 256 synth models without causing size mismatch error
     global n_spk,tgt_sr,net_g,vc,cpt,device,is_half
-    print("loading pth %s"%model_path)
-    cpt = torch.load(model_path, map_location="cuda:1")
+    cpt = torch.load(model_path, map_location="cpu")
     tgt_sr = cpt["config"][-1]
-    cpt["config"][-3]=cpt["weight"]["emb_g.weight"].shape[0]
-    if_f0=cpt.get("f0",1)
-    if if_f0 == 1:
-        net_g = SynthesizerTrnMs768NSFsid(
-            *cpt["config"], is_half=config.is_half
-        )
-    else:
-        net_g = SynthesizerTrnMs768NSFsid_nono(*cpt["config"])
+    cpt["config"][-3] = cpt["weight"]["emb_g.weight"].shape[0]
+    if_f0 = cpt.get("f0", 1)
+    version = cpt.get("version", "v1")
+    if version == "v1":
+        if if_f0 == 1:
+            net_g = SynthesizerTrnMs256NSFsid(*cpt["config"], is_half=config.is_half)
+        else:
+            net_g = SynthesizerTrnMs256NSFsid_nono(*cpt["config"])
+    elif version == "v2":
+        if if_f0 == 1:
+            net_g = SynthesizerTrnMs768NSFsid(*cpt["config"], is_half=config.is_half)
+        else:
+            net_g = SynthesizerTrnMs768NSFsid_nono(*cpt["config"])
     del net_g.enc_q
     print(net_g.load_state_dict(cpt["weight"], strict=False))
-    net_g.eval().to(device)
-    if (is_half):net_g = net_g.half()
-    else:net_g = net_g.float()
+    net_g.eval().to(config.device)
+    if config.is_half:
+        net_g = net_g.half()
+    else:
+        net_g = net_g.float()
     vc = VC(tgt_sr, config)
-    n_spk=cpt["config"][-3]
+    n_spk = cpt["config"][-3]
 
 #Config
-device = "cuda:1"
+device = "cuda:0"
 is_half = False
 config=Config(device,is_half)
 
@@ -197,7 +203,7 @@ def rvg_tts(input_text):
         f0_up_key=0,
         f0_file=None, 
         f0_method="crepe",
-        file_index="", # TODO Fix assertion error caused when using an index.
+        file_index=f"{now_dir}\\models\\rvc_index.index",
         index_rate=0.6,
     )
     wavfile.write("output.wav", tgt_sr, wav_opt)

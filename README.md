@@ -7,12 +7,13 @@ You can then place them into the model folder with the corresponding names:
 - `hubert_base.pt` -> `hubert.pt`
 - `forward_steps90k.pt` -> `forward.pt`
 - `(rvc v2 .pth model name)` -> `rvc_model.pth`
+- `(rvc v2 .index model name)` -> `rvc_index.index` (optional)
 
 Once you have all of these, you can run the `RVG.py` file and replace the sample text on the provided function call at the bottom or you can include this code in your own project and import the `rvg_tts` function from `RVG.py`.
 
 ## Todo
  - [ ] Add in support for the RVC v1 models
- - [ ] Fix assertion error with faiss index when using rvc index files
+ - [X] Fix assertion error with faiss index when using rvc index files
  - [ ] Create a proper importable package
  - [ ] Further code condensing 
 
