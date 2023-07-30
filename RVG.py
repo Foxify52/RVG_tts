@@ -130,7 +130,7 @@ def load_hubert():
     hubert_model.eval()
 
 def vc_single(sid, audio, input_audio, f0_up_key, f0_file, f0_method, file_index, index_rate):
-    global tgt_sr,net_g,vc,hubert_model
+    global tgt_sr,net_g,vc,hubert_model, version
     f0_up_key = int(f0_up_key)
     times = [0, 0, 0]
     if(hubert_model==None):
@@ -152,7 +152,7 @@ def vc_single(sid, audio, input_audio, f0_up_key, f0_file, f0_method, file_index
         tgt_sr=tgt_sr,
         resample_sr=0,
         rms_mix_rate=0.25,
-        version=2,
+        version=version,
         protect=0.33,
         f0_file=f0_file
     )
@@ -160,7 +160,7 @@ def vc_single(sid, audio, input_audio, f0_up_key, f0_file, f0_method, file_index
     return audio_opt
 
 def get_vc(model_path): # TODO update get_vc to work with v1 256 synth models without causing size mismatch error
-    global n_spk,tgt_sr,net_g,vc,cpt,device,is_half
+    global n_spk,tgt_sr,net_g,vc,cpt,device,is_half, version
     cpt = torch.load(model_path, map_location="cpu")
     tgt_sr = cpt["config"][-1]
     cpt["config"][-3] = cpt["weight"]["emb_g.weight"].shape[0]
