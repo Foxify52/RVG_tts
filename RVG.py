@@ -22,7 +22,7 @@ class Synthesizer:
         tts_model = init_tts_model(tts_config)
         tts_model.load_state_dict(tts_checkpoint['model'])
         self.tts_model = tts_model
-        self.vocoder = torch.hub.load('seungwonpark/melgan', 'melgan')
+        self.vocoder = torch.hub.load('seungwonpark/melgan', 'melgan', verbose=False)
         self.vocoder.to(device).eval()
         self.cleaner = Cleaner.from_config(tts_config)
         self.tokenizer = Tokenizer()
@@ -43,12 +43,13 @@ class Synthesizer:
                                       pitch_function=pitch_function,
                                       energy_function=energy_function)
         m = gen['mel_post'].cpu()
-        if voc_model == 'griffinlim':
-            wav = self.dsp.griffinlim(m.squeeze().numpy(), n_iter=32)
-        else:
+        if voc_model == 'melgan':
             m = m.cuda()
             with torch.no_grad():
                 wav = self.vocoder.inference(m).cpu().numpy()
+        else:
+            print("Specified vocoder isn't supported")
+            exit()
         return wav
 
 def pcm2float(sig, dtype='float32'):
@@ -148,7 +149,7 @@ def vc_single(sid, audio, input_audio, f0_up_key, f0_file, f0_method, file_index
         resample_sr=0,
         rms_mix_rate=0.25,
         version=version,
-        protect=0.33,
+        protect=0.5,
         f0_file=f0_file
     )
     print(times)
@@ -190,16 +191,16 @@ def rvg_tts(
         device="cuda:0",
         is_half=True,
         silent_mode=False,
-        persist=False # TODO Persist argument. Will allow synth and hubert models to persist in memory rather than being reloaded on each use. Should result in faster inference times.
+        persist=True
     ):
     global now_dir, config, hubert_model
     now_dir = os.getcwd()
     sys.path.append(now_dir)
     config=Config(device,is_half)
-    hubert_model = None
+    hubert_model = None if persist else vars().get('hubert_model', None)
 
     synth_forward = Synthesizer(tts_model)
-    synth_output = pcm2float(synth_forward(input_text, voc_model='melgan', alpha=1.2), dtype=np.float32)
+    synth_output = pcm2float(synth_forward(input_text, voc_model='melgan', alpha=1.3), dtype=np.float32)
 
     get_vc(rvc_model)
     wav_opt=vc_single(
@@ -225,6 +226,6 @@ parser.add_argument("--rvc_index", default=f"{os.getcwd()}\\models\\rvc_index.in
 parser.add_argument("--device", default="cuda:0", type=str, help="The device to run the models on")
 parser.add_argument("--is_half", action="store_false", help="Whether to use half precision for the models")
 parser.add_argument("--silent_mode", action="store_false", help="Whether to suppress the output sound")
-parser.add_argument("--persist", action="store_false", help="Whether to keep the models loaded in memory after each conversion")
+parser.add_argument("--persist", action="store_true", help="Whether to keep the models loaded in memory after each conversion")
 args = parser.parse_args()
 rvg_tts(**vars(args))
