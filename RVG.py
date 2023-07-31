@@ -1,5 +1,4 @@
-import winsound
-import torch, os, sys, numpy as np
+import torch, os, sys, argparse, winsound, numpy as np
 from typing import Callable
 
 from utils.checkpoints import init_tts_model
@@ -11,10 +10,6 @@ from utils.vc_infer_pipeline import VC
 from lib.rvc.models import SynthesizerTrnMs256NSFsid, SynthesizerTrnMs256NSFsid_nono, SynthesizerTrnMs768NSFsid, SynthesizerTrnMs768NSFsid_nono
 from fairseq import checkpoint_utils
 from scipy.io import wavfile
-
-now_dir = os.getcwd()
-sys.path.append(now_dir)
-hubert_model=None
 
 class Synthesizer:
 
@@ -184,18 +179,29 @@ def get_vc(model_path):
     else:
         net_g = net_g.float()
     vc = VC(tgt_sr, config)
-    n_spk = cpt["config"][-3]
+    n_spk = cpt["config"][-3]   
 
-#Config
-device = "cuda:0"
-is_half = False
-config=Config(device,is_half)
+def rvg_tts(
+        input_text="hello world!",
+        voice_transform=0, 
+        tts_model=f"{os.getcwd()}\\models\\forward.pt",
+        rvc_model=f"{os.getcwd()}\\models\\rvc_model.pth",
+        rvc_index=f"{os.getcwd()}\\models\\rvc_index.index",
+        device="cuda:0",
+        is_half=True,
+        silent_mode=False,
+        persist=False # TODO Persist argument. Will allow synth and hubert models to persist in memory rather than being reloaded on each use. Should result in faster inference times.
+    ):
+    global now_dir, config, hubert_model
+    now_dir = os.getcwd()
+    sys.path.append(now_dir)
+    config=Config(device,is_half)
+    hubert_model = None
 
-def rvg_tts(input_text, voice_transform=0):
-    synth_forward = Synthesizer(tts_path=f'{now_dir}\\models\\forward.pt')
+    synth_forward = Synthesizer(tts_model)
     synth_output = pcm2float(synth_forward(input_text, voc_model='melgan', alpha=1.2), dtype=np.float32)
 
-    get_vc(f"{now_dir}\\models\\rvc_model.pth")
+    get_vc(rvc_model)
     wav_opt=vc_single(
         sid=0, 
         audio=synth_output,
@@ -203,10 +209,22 @@ def rvg_tts(input_text, voice_transform=0):
         f0_up_key=voice_transform,
         f0_file=None, 
         f0_method="crepe",
-        file_index=f"{now_dir}\\models\\rvc_index.index",
+        file_index=rvc_index,
         index_rate=0.6,
     )
     wavfile.write("output.wav", tgt_sr, wav_opt)
-    winsound.PlaySound("output.wav", winsound.SND_FILENAME)
+    if silent_mode == False:
+        winsound.PlaySound("output.wav", winsound.SND_FILENAME)
 
-rvg_tts('Sample text. Replace me!', 0)
+parser = argparse.ArgumentParser(description = "A retrieval based voice generation text to speech system")
+parser.add_argument("--input_text", default="hello world!", type=str, help="The input text to be converted to speech")
+parser.add_argument("--voice_transform", default=0, type=int, help="The voice transposition to be applied (Ranges from -12 to +12)")
+parser.add_argument("--tts_model", default=f"{os.getcwd()}\\models\\forward.pt", type=str, help="The path to the text-to-speech model")
+parser.add_argument("--rvc_model", default=f"{os.getcwd()}\\models\\rvc_model.pth", type=str, help="The path to the RVC model")
+parser.add_argument("--rvc_index", default=f"{os.getcwd()}\\models\\rvc_index.index", type=str, help="The path to the RVC index")
+parser.add_argument("--device", default="cuda:0", type=str, help="The device to run the models on")
+parser.add_argument("--is_half", action="store_false", help="Whether to use half precision for the models")
+parser.add_argument("--silent_mode", action="store_false", help="Whether to suppress the output sound")
+parser.add_argument("--persist", action="store_false", help="Whether to keep the models loaded in memory after each conversion")
+args = parser.parse_args()
+rvg_tts(**vars(args))

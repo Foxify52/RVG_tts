@@ -14,7 +14,7 @@ You can then place them into the model folder with the corresponding names:
 - `(rvc .pth model name)` -> `rvc_model.pth`
 - `(rvc .index model name)` -> `rvc_index.index` (optional)
 
-Once you have all of these, you can run the `RVG.py` file and replace the sample text on the provided function call at the bottom or you can include this code in your own project and import the `rvg_tts` function from `RVG.py`.
+Once you have all of these, you can run the `RVG.py` file with your desired arguments over CLI or you can include this code in your own project and import the `rvg_tts` function from `RVG.py`.
 
 ## Current feature set
  - RVC v1 and v2 model support
@@ -24,7 +24,7 @@ Once you have all of these, you can run the `RVG.py` file and replace the sample
 ## Todo
  - [X] Support both RVC model versions
  - [ ] Create a proper importable package
- - [ ] Support calling from CLI
+ - [X] Support calling from CLI
  - [ ] Further code condensing 
 
 ## Credits
