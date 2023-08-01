@@ -7,8 +7,8 @@ import torch.nn.functional as F
 from torch.nn import Embedding
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 
-from lib.fwt.common_layers import CBHG, LengthRegulator, BatchNormConv
-from utils.text.symbols import phonemes
+from .common_layers import CBHG, LengthRegulator, BatchNormConv
+from .text_utils import phonemes
 
 
 class SeriesPredictor(nn.Module):

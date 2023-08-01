@@ -19,13 +19,14 @@ Once you have all of these, you can run the `RVG.py` file with your desired argu
 ## Current feature set
  - RVC v1 and v2 model support
  - RVC Index support
- - Fast inference speed (~10 seconds)
+ - Fast inference speed (~10 seconds on start and ~5 on consecutive runs with persistent mode on via importing)
+ - Easy to use CLI
 
 ## Todo
  - [X] Support both RVC model versions
- - [ ] Create a proper importable package
+ - [X] Create a proper importable package
  - [X] Support calling from CLI
- - [ ] Further code condensing 
+ - [X] Further code condensing 
 
 ## Credits
 [Forward Tacotron](https://github.com/as-ideas/ForwardTacotron) is licensed under the [MIT License](https://github.com/as-ideas/ForwardTacotron/blob/master/LICENSE)

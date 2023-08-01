@@ -1,12 +1,11 @@
 import torch, os, sys, argparse, winsound, numpy as np
 from typing import Callable
 
-from utils.checkpoints import init_tts_model
-from utils.dsp import DSP
-from utils.text.cleaners import Cleaner
-from utils.text.tokenizer import Tokenizer
+from lib.fwt.dsp import DSP
+from lib.fwt.forward_tacotron import ForwardTacotron
+from lib.fwt.text_utils import Cleaner, Tokenizer
 from multiprocessing import cpu_count
-from utils.vc_infer_pipeline import VC
+from lib.fwt.vc_infer_pipeline import VC
 from lib.rvc.models import SynthesizerTrnMs256NSFsid, SynthesizerTrnMs256NSFsid_nono, SynthesizerTrnMs768NSFsid, SynthesizerTrnMs768NSFsid_nono
 from fairseq import checkpoint_utils
 from scipy.io import wavfile
@@ -19,7 +18,7 @@ class Synthesizer:
         self.device = torch.device(device)
         tts_checkpoint = torch.load(tts_path, map_location=self.device)
         tts_config = tts_checkpoint['config']
-        tts_model = init_tts_model(tts_config)
+        tts_model = ForwardTacotron.from_config(tts_config)
         tts_model.load_state_dict(tts_checkpoint['model'])
         self.tts_model = tts_model
         self.vocoder = torch.hub.load('seungwonpark/melgan', 'melgan', verbose=False)
@@ -125,7 +124,7 @@ def load_hubert():
         hubert_model = hubert_model.float()
     hubert_model.eval()
 
-def vc_single(sid, audio, input_audio, f0_up_key, f0_file, f0_method, file_index, index_rate):
+def vc_single(sid, audio, f0_up_key, f0_file, file_index, index_rate):
     global tgt_sr,net_g,vc,hubert_model, version
     f0_up_key = int(f0_up_key)
     times = [0, 0, 0]
@@ -137,14 +136,11 @@ def vc_single(sid, audio, input_audio, f0_up_key, f0_file, f0_method, file_index
         net_g=net_g, 
         sid=sid, 
         audio=audio, 
-        input_audio_path=input_audio, 
         times=times, 
         f0_up_key=f0_up_key, 
-        f0_method=f0_method,
         file_index=file_index,
         index_rate=index_rate,
         if_f0=if_f0,
-        filter_radius=3,
         tgt_sr=tgt_sr,
         resample_sr=0,
         rms_mix_rate=0.25,
@@ -206,10 +202,8 @@ def rvg_tts(
     wav_opt=vc_single(
         sid=0, 
         audio=synth_output,
-        input_audio=None, 
         f0_up_key=voice_transform,
-        f0_file=None, 
-        f0_method="crepe",
+        f0_file=None,
         file_index=rvc_index,
         index_rate=0.6,
     )
@@ -226,6 +220,5 @@ parser.add_argument("--rvc_index", default=f"{os.getcwd()}\\models\\rvc_index.in
 parser.add_argument("--device", default="cuda:0", type=str, help="The device to run the models on")
 parser.add_argument("--is_half", action="store_false", help="Whether to use half precision for the models")
 parser.add_argument("--silent_mode", action="store_false", help="Whether to suppress the output sound")
-parser.add_argument("--persist", action="store_true", help="Whether to keep the models loaded in memory after each conversion")
 args = parser.parse_args()
 rvg_tts(**vars(args))

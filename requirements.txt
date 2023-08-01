@@ -4,8 +4,6 @@ inflect==7.0.0
 librosa==0.9.1
 numpy==1.23.5
 phonemizer==3.2.1
-praat-parselmouth==0.4.3
-pyworld==0.3.2
 scipy==1.9.3
 soundfile==0.12.1
 tensorboardX==2.6.1
