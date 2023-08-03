@@ -74,7 +74,7 @@ class Config:
         self.x_pad, self.x_query, self.x_center, self.x_max = self.device_config()
 
     def device_config(self) -> tuple:
-        if torch.cuda.is_available():
+        if torch.cuda.is_available() and self.device != "cpu":
             i_device = int(self.device.split(":")[-1])
             self.gpu_name = torch.cuda.get_device_name(i_device)
             self.gpu_name = None
@@ -89,7 +89,7 @@ class Config:
             self.device = "mps"
         else:
             self.device = "cpu"
-            self.is_half = True
+            self.is_half = False
 
         if self.n_cpu == 0:
             self.n_cpu = cpu_count()
