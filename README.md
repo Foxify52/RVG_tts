@@ -6,6 +6,8 @@ This tts has been tested on [python 3.10](https://www.python.org/downloads/relea
 
 You are required to have the latest 64 bit [Espeak NG](https://github.com/espeak-ng/espeak-ng/releases) release.
 
+In order to build the fairseq dependency, you are required to have [Visual Studio](https://visualstudio.microsoft.com/downloads/) and install the "Desktop development with C++" development package.
+
 ## Usage
 To use it, simply install the requirements with `pip install -r requirements.txt` and then download the [Hubert](https://huggingface.co/lj1995/VoiceConversionWebUI/resolve/main/hubert_base.pt) model, [Forward Tacotron](https://public-asai-dl-models.s3.eu-central-1.amazonaws.com/ForwardTacotron/forward_step90k.pt) model and any [RVC](https://discord.com/invite/aihub) model.
 You can then place them into the model folder with the corresponding names:
@@ -26,7 +28,7 @@ Once you have all of these, you can run the `RVG.py` file with your desired argu
  - [X] Support both RVC model versions
  - [X] Create a proper importable package
  - [X] Support calling from CLI
- - [X] Further code condensing 
+ - [X] Further code condensing
 
 ## Credits
 [Forward Tacotron](https://github.com/as-ideas/ForwardTacotron) is licensed under the [MIT License](https://github.com/as-ideas/ForwardTacotron/blob/master/LICENSE)
