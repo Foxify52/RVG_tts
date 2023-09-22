@@ -29,6 +29,7 @@ Once you have all of these, you can run the `RVG.py` file with your desired argu
  - [X] Create a proper importable package
  - [X] Support calling from CLI
  - [X] Further code condensing
+ - [ ] Multi-lang support
 
 ## Credits
 [Forward Tacotron](https://github.com/as-ideas/ForwardTacotron) is licensed under the [MIT License](https://github.com/as-ideas/ForwardTacotron/blob/master/LICENSE)
