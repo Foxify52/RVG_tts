@@ -31,6 +31,9 @@ Once you have all of these, you can run the `RVG.py` file with your desired argu
  - [X] Further code condensing
  - [ ] Multi-lang support
 
+## Other languages
+In order to use a different language, a new forward tacotron model must be trained. This is something I cannot do without a dataset. This is where I ask the community for help. If you can provide a dataset, please do.
+
 ## Credits
 [Forward Tacotron](https://github.com/as-ideas/ForwardTacotron) is licensed under the [MIT License](https://github.com/as-ideas/ForwardTacotron/blob/master/LICENSE)
 
