@@ -5,7 +5,7 @@ from lib.fwt.dsp import DSP
 from lib.fwt.forward_tacotron import ForwardTacotron
 from lib.fwt.text_utils import Cleaner, Tokenizer
 from multiprocessing import cpu_count
-from lib.fwt.vc_infer_pipeline import VC
+from lib.rvc.vc_infer_pipeline import VC
 from lib.rvc.models import SynthesizerTrnMs256NSFsid, SynthesizerTrnMs256NSFsid_nono, SynthesizerTrnMs768NSFsid, SynthesizerTrnMs768NSFsid_nono
 from fairseq import checkpoint_utils
 from scipy.io import wavfile
@@ -213,7 +213,7 @@ def rvg_tts(
 
 parser = argparse.ArgumentParser(description = "A retrieval based voice generation text to speech system")
 parser.add_argument("--input_text", default="hello world!", type=str, help="The input text to be converted to speech")
-parser.add_argument("--voice_transform", default=0, type=int, help="The voice transposition to be applied (Ranges from -12 to +12)")
+parser.add_argument("--voice_transform", default=0, type=int, help="The voice transposition to be applied (Ranges from -12 to 12)")
 parser.add_argument("--tts_model", default=f"{os.getcwd()}\\models\\forward.pt", type=str, help="The path to the text-to-speech model")
 parser.add_argument("--rvc_model", default=f"{os.getcwd()}\\models\\rvc_model.pth", type=str, help="The path to the RVC model")
 parser.add_argument("--rvc_index", default=f"{os.getcwd()}\\models\\rvc_index.index", type=str, help="The path to the RVC index")

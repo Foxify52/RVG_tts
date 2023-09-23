@@ -3,8 +3,8 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from lib.rvc import commons
-from lib.rvc.modules import LayerNorm
+from . import commons
+from .modules import LayerNorm
 
 
 class Encoder(nn.Module):

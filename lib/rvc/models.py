@@ -2,13 +2,13 @@ import math
 import torch
 from torch import nn
 from torch.nn import functional as F
-from lib.rvc import modules
-from lib.rvc import attentions
-from lib.rvc import commons
-from lib.rvc.commons import init_weights, get_padding
+from . import modules
+from . import attentions
+from . import commons
+from .commons import init_weights, get_padding
 from torch.nn import Conv1d, ConvTranspose1d, Conv2d
 from torch.nn.utils import weight_norm, remove_weight_norm, spectral_norm
-from lib.rvc.commons import init_weights
+from .commons import init_weights
 import numpy as np
 
 
