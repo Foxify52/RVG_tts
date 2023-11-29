@@ -9,7 +9,7 @@ You are required to have the latest 64 bit [Espeak NG](https://github.com/espeak
 In order to build the fairseq dependency, you are required to have [Visual Studio](https://visualstudio.microsoft.com/downloads/) and install the "Desktop development with C++" development package.
 
 ## Usage
-To use it, simply install the requirements with `pip install -r requirements.txt` and then download the [Hubert](https://huggingface.co/lj1995/VoiceConversionWebUI/resolve/main/hubert_base.pt) model, [Forward Tacotron](https://public-asai-dl-models.s3.eu-central-1.amazonaws.com/ForwardTacotron/forward_step90k.pt) model and any [RVC](https://discord.com/invite/aihub) model.
+To use it, install [poetry](https://python-poetry.org/docs/#installing-with-the-official-installer) and install the requirements with `poetry install --no-root` and then download the [Hubert](https://huggingface.co/lj1995/VoiceConversionWebUI/resolve/main/hubert_base.pt) model, [Forward Tacotron](https://public-asai-dl-models.s3.eu-central-1.amazonaws.com/ForwardTacotron/forward_step90k.pt) model and any [RVC](https://discord.com/invite/aihub) model.
 You can then place them into the model folder with the corresponding names:
 - `hubert_base.pt` -> `hubert.pt`
 - `forward_steps90k.pt` -> `forward.pt`
