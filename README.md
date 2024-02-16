@@ -16,7 +16,7 @@ You can then place them into the model folder with the corresponding names:
 - `(rvc .pth model name)` -> `rvc_model.pth`
 - `(rvc .index model name)` -> `rvc_index.index` (optional)
 
-Once you have all of these, you can run the `RVG.py` file with your desired arguments over CLI or you can include this code in your own project and import the `rvg_tts` function from `RVG.py`.
+Once you have all of these, you can run the `RVG.py` file with your desired arguments over CLI, run the file without any arguments to launch the Gradio WebUI or you can include this code in your own project and import the `rvg_tts` function from `RVG.py`.
 
 ## Current feature set
  - RVC v1 and v2 model support
@@ -29,6 +29,7 @@ Once you have all of these, you can run the `RVG.py` file with your desired argu
  - [X] Create a proper importable package
  - [X] Support calling from CLI
  - [X] Further code condensing
+ - [X] Gradio WebUI
  - [ ] Multi-lang support
 
 ## Other languages

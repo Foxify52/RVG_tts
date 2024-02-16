@@ -6,6 +6,7 @@ DEFAULT_MIN_BIN_WIDTH = 1e-3
 DEFAULT_MIN_BIN_HEIGHT = 1e-3
 DEFAULT_MIN_DERIVATIVE = 1e-3
 
+
 def piecewise_rational_quadratic_transform(
     inputs,
     unnormalized_widths,
